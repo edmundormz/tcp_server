@@ -2,6 +2,18 @@ import socket
 import sys
 import thread
 import time
+import fcntl
+import struct
+
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', ifname[:15])
+    )[20:24])
+
+ip = get_ip_address('eth0')
 
 def connection_function(connection, client_address):
     print >>sys.stderr, 'connection from', client_address
@@ -18,7 +30,8 @@ def connection_function(connection, client_address):
 
 # Create the TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = ('192.168.100.5', 8888)
+# server_address = ('192.168.100.8', 8888)
+server_address = (ip, 8888)
 print >>sys.stderr, 'starting up on port ', server_address
 sock.bind(server_address)
 #Listen for incoming connections
