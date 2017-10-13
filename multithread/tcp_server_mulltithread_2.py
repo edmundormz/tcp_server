@@ -19,6 +19,9 @@ ip = get_ip_address('eth0')
 
 def checksum(frame):
     a,b,c = frame.split(“,”)
+    a = int(a)
+    b = int(b)
+    c = int(c)
     checksum_trama = a ^ b ^ c 
     return frame+','+checksum_trama
 
