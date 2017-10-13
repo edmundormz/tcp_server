@@ -17,6 +17,11 @@ def get_ip_address(ifname):
 # interface to discover ip address of
 ip = get_ip_address('eth0')
 
+def checksum(frame):
+    a,b,c = frame.split(“,”)
+    checksum_trama = a ^ b ^ c 
+    return frame+','+checksum_trama
+
 # Receive data from new a connection and returns data to client
 def connection_function(connection, client_address):
     print >>sys.stderr, 'connection from', client_address
