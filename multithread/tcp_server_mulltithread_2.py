@@ -34,22 +34,23 @@ def validate(frame):
 # Receive data from new a connection and returns data to client
 def connection_function(connection, client_address):
     print >>sys.stderr, 'connection from', client_address
-    config = '02,17,00'
+    config_output = '02,17,00'
     turn_on = '00,17,01'
     turn_off = '00,17,00'
-    config_output = '02,02,01'
+    config_input = '02,02,01'
     read_state = '01,02,00'
-    configs = [config,turn_on,config_output,read_state]
+    configs = [config_output,turn_on,config_input,read_state]
     # to_send = checksum(frame)
     for instruction in configs:
         to_send = checksum(instruction)
         try:        
             connection.sendall(to_send)
-            print 'Data sent: ' + instruction
+            print 'Data sent: ' + to_send
         except:
             print 'Could not send data to client' + str(client_address)
         received = connection.recv(64)
         if received:
+            validate(received)
             continue
         else:
             print 'No response'
