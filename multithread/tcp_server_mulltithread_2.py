@@ -18,32 +18,54 @@ def get_ip_address(ifname):
 ip = get_ip_address('eth0')
 
 def checksum(frame):
-    a,b,c = frame.split(“,”)
+    a,b,c = frame.split(',')
     a = int(a)
     b = int(b)
     c = int(c)
     checksum_trama = a ^ b ^ c 
-    return frame+','+checksum_trama
+    return frame+',' + str(checksum_trama)
 
 # Receive data from new a connection and returns data to client
 def connection_function(connection, client_address):
     print >>sys.stderr, 'connection from', client_address
-    frame = '02,17,19'
-    try:
-        connection.sendall(frame)
-        print 'Data sent: ' + frame
-    except:
-        print 'Could not send data to client' + str(client_address)
-    while True:
+    config = '02,17,00'
+    turn_on = '00,17,01'
+    turn_off = '00,17,00'
+    config_output = '02,02,01'
+    read_state = '01,02,00'
+    configs = [config,turn_on,config_output,read_state]
+    # to_send = checksum(frame)
+    for instruction in configs:
+        to_send = checksum(instruction)
+        try:        
+            connection.sendall(to_send)
+            print 'Data sent: ' + instruction
+        except:
+            print 'Could not send data to client' + str(client_address)
         received = connection.recv(64)
         if received:
-            print 'Data received: ' + received
-            break
-    print 'Closing connection from ' + str(client_address)
-    connection.close()
+            continue
+        else:
+            print 'No response'
+        time.sleep(5)
+        print instruction
+
+    # try:
+    #     connection.sendall(connection_function(config))
+    #     print 'Data sent: ' + to_send
+    # except:
+    #     print 'Could not send data to client' + str(client_address)
+    # while True:
+    #     received = connection.recv(64)
+    #     if received:
+    #         print 'Data received: ' + received
+    #         break
+    # print 'Closing connection from ' + str(client_address)
+    # connection.close()
 
 # Create the TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_address = (ip, 8888)
 print >>sys.stderr, 'starting up on port ', server_address
 sock.bind(server_address)
