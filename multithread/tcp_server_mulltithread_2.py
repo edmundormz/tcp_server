@@ -25,6 +25,12 @@ def checksum(frame):
     checksum_trama = a ^ b ^ c 
     return frame+',' + str(checksum_trama)
 
+def validate(frame):
+    if frame.find('255') >= 0:
+        print 'Error en la trama enviada' + ' ' +frame
+    else:
+        print 'Trama enviada exitosamente' + ' ' +frame
+
 # Receive data from new a connection and returns data to client
 def connection_function(connection, client_address):
     print >>sys.stderr, 'connection from', client_address
