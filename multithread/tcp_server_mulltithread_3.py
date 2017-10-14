@@ -54,45 +54,89 @@ def connection_function(connection, client_address):
         if opcionMenu == 1:
             config = '02,17,00'
             to_send = checksum(config)
+            try:        
+                connection.sendall(to_send)
+                print 'Data sent: ' + to_send
+            except:
+                print 'Could not send data to client' + str(client_address)
+            received = connection.recv(64)
+            if received:
+                validate(received)
+                continue
+            else:
+                print 'No response'
+            time.sleep(5)
+            print instruction
+
         elif opcionMenu == 2:
             turn_on = '00,17,01'
             to_send = checksum(turn_on)
+            try:        
+                connection.sendall(to_send)
+                print 'Data sent: ' + to_send
+            except:
+                print 'Could not send data to client' + str(client_address)
+            received = connection.recv(64)
+            if received:
+                validate(received)
+                continue
+            else:
+                print 'No response'
+            time.sleep(5)
+            print instruction
+
         elif opcionMenu == 3:
             turn_off = '00,17,00'
             to_send = checksum(turn_off)
+            try:        
+                connection.sendall(to_send)
+                print 'Data sent: ' + to_send
+            except:
+                print 'Could not send data to client' + str(client_address)
+            received = connection.recv(64)
+            if received:
+                validate(received)
+                continue
+            else:
+                print 'No response'
+            time.sleep(5)
+            print instruction
+
         elif opcionMenu == 4:
             config_output = '02,02,01'
-            to_send = checksum(config_output)
+            to_send = checksum(config_output) 
+            try:        
+                connection.sendall(to_send)
+                print 'Data sent: ' + to_send
+            except:
+                print 'Could not send data to client' + str(client_address)
+            received = connection.recv(64)
+            if received:
+                validate(received)
+                continue
+            else:
+                print 'No response'
+            time.sleep(5)
+            print instruction
+
         elif opcionMenu == 5:
             read_state = '01,02,00'
             to_send = checksum(read_state)
+            try:        
+                connection.sendall(to_send)
+                print 'Data sent: ' + to_send
+            except:
+                print 'Could not send data to client' + str(client_address)
+            received = connection.recv(64)
+            if received:
+                validate(received)
+                continue
+            else:
+                print 'No response'
+            time.sleep(5)
+            print instruction
 
-        try:
-            connection.sendall(to_send)
-            print 'Data sent: ' + instruction
-        except:
-            print 'Could not send data to client' + str(client_address)
-        received = connection.recv(64)
-        if received:
-            continue
-        else:
-            print 'No response'
-        time.sleep(5)
-        print instruction
 
-
-    # try:
-    #     connection.sendall(connection_function(config))
-    #     print 'Data sent: ' + to_send
-    # except:
-    #     print 'Could not send data to client' + str(client_address)
-    # while True:
-    #     received = connection.recv(64)
-    #     if received:
-    #         print 'Data received: ' + received
-    #         break
-    # print 'Closing connection from ' + str(client_address)
-    # connection.close()
 
 # Create the TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
